@@ -10,6 +10,8 @@ GitHub Copilot Chat was actually used to propose a JavaScript calculation/valida
 
 This disclosure does not establish eligibility for any competition. Organizers decide whether this workflow meets their rules.
 
+**MLH submission is not yet complete.** The verified challenge links, real screenshot and ready-to-use field contents are in [SUBMISSION.md](SUBMISSION.md).
+
 ## Try it
 
 **Live demo:** https://guangfeizhao.github.io/token-ledger-mlh-2026/
