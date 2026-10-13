@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="在浏览器内比较AI模型的token、缓存、重试和月度预算成本。示例价格可编辑，无API调用。">
+  <title>Token Ledger · AI 模型成本计算器</title>
+  <style>
+:root{font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#172c34;background:#f4f6f4;font-synthesis:none;--green:#087c68;--muted:#627477;--border:#dce4df;--orange:#9b4b1d}*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer}a{color:inherit}.skip-link{position:absolute;left:12px;top:-60px;z-index:10;background:#fff;padding:10px}.skip-link:focus{top:12px}.topbar{display:flex;align-items:center;justify-content:space-between;padding:24px 5vw;border-bottom:1px solid var(--border);background:#fbfcfa}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-size:20px;font-weight:750;letter-spacing:-.7px}.brand-mark{display:grid;place-items:center;width:42px;height:42px;background:#143d36;color:#d7f673;border-radius:11px;letter-spacing:-3px;font-size:28px;padding-right:3px}.brand small{display:block;margin-top:4px;font-weight:400;letter-spacing:1px;font-size:10px;color:var(--muted)}.privacy{font-size:12px;color:var(--muted)}.privacy span{color:var(--green);padding-right:6px}main{max-width:1480px;margin:auto;padding:0 5vw}.intro{display:flex;align-items:center;justify-content:space-between;gap:36px;padding:46px 0 38px}.eyebrow{font-size:10px;letter-spacing:1.7px;font-weight:750;color:var(--muted);margin:0 0 12px}h1{font-size:clamp(30px,3.3vw,46px);font-weight:650;line-height:1.25;letter-spacing:-2px;margin:0}h1 span{color:var(--green)}.subtitle{font-size:14px;color:var(--muted);margin:16px 0 0}.price-note{max-width:330px;display:flex;align-items:flex-start;gap:12px;padding:18px;border:1px solid #d8dfc8;background:#eff3e4;border-radius:12px;font-size:12px}.price-note strong{font-size:13px}.price-note p{line-height:1.7;margin:5px 0 0;color:#58684d}.note-icon{display:grid;place-items:center;border:1px solid #829567;border-radius:50%;width:18px;height:18px;flex-shrink:0;font-family:serif}.workspace{display:grid;grid-template-columns:280px minmax(0,1fr);gap:26px;align-items:start}.panel{background:#fff;border:1px solid var(--border);border-radius:16px}.settings{padding:24px 20px}.section-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:22px}.section-heading .eyebrow{margin-bottom:8px}h2{font-size:18px;margin:0;letter-spacing:-.3px;font-weight:650}.text-button{font-size:11px;color:var(--green);border:0;background:none;padding:7px 0;white-space:nowrap}.field{display:block;margin:0 0 17px}.field label{display:block;font-size:12px;font-weight:550;margin-bottom:7px}.input-wrap{display:flex;align-items:center;position:relative}.input-wrap input{width:100%;min-width:0;border:1px solid #d8e2dc;background:#fcfdfb;border-radius:7px;padding:10px 55px 10px 11px;color:#18342b;font-size:14px;font-variant-numeric:tabular-nums;outline:none}.input-wrap input:focus{border-color:var(--green);box-shadow:0 0 0 3px #087c681a}.input-wrap input[aria-invalid=true]{border-color:#b5442e;background:#fff7f4}.input-suffix{position:absolute;right:11px;pointer-events:none;font-size:10px;color:var(--muted)}.field-help{font-size:10px;color:var(--muted);line-height:1.6;margin:5px 0 0}.field-error{font-size:10px;color:#a43524;line-height:1.5;margin:5px 0 0;min-height:0}.field-error:empty{display:none}.field-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field-pair .input-wrap input{padding-right:30px}.formula-note{border-top:1px solid var(--border);padding-top:16px;font-size:11px;line-height:1.8}.formula-note strong{font-weight:600}.formula-note p{color:var(--muted);margin:6px 0 0}.unit-tag{background:#e7eee8;border-radius:5px;padding:6px 9px;font-size:10px;white-space:nowrap;color:#476054}.comparison>.section-heading{padding-top:5px;margin-bottom:18px}.model-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.model-card{border:1px solid var(--border);border-radius:14px;background:#fff;overflow:hidden;min-width:0}.model-title{padding:18px 16px 0;display:flex;align-items:center;gap:8px}.model-dot{width:8px;height:8px;background:var(--model-color);border-radius:50%;flex-shrink:0}.model-title input{width:100%;min-width:0;background:none;border:0;border-bottom:1px dashed #cad5ce;padding:3px 0;font-size:15px;font-weight:650;color:#18392e}.model-title input:focus{outline:2px solid var(--green);outline-offset:3px}.model-kind{margin:7px 16px 15px;color:var(--muted);font-size:10px}.model-fields{padding:0 16px}.model-fields .field{margin-bottom:13px}.model-fields .field label{font-size:10px}.model-fields .input-wrap input{padding:8px 37px 8px 9px;font-size:13px}.model-results{padding:17px 16px;background:#f4f8f4;border-top:1px solid var(--border)}.result-label{font-size:10px;color:var(--muted);margin:0 0 5px}.month-value{font-size:clamp(20px,2.1vw,31px);letter-spacing:-1px;font-weight:650;white-space:normal;overflow-wrap:anywhere;line-height:1.15;margin:0 0 9px;font-variant-numeric:tabular-nums}.month-value small{font-size:10px;letter-spacing:0;font-weight:400;color:var(--muted);margin-left:3px}.budget-pill{display:inline-block;border-radius:5px;background:#dceee3;color:#1a6648;font-size:9px;font-weight:550;padding:5px 7px}.budget-pill.over{background:#ffead8;color:#8b441e}.metrics{margin:16px 0 0}.metric{display:flex;align-items:baseline;justify-content:space-between;gap:7px;margin:9px 0;font-size:10px;line-height:1.4}.metric dt{color:var(--muted)}.metric dd{margin:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;min-width:0}.status-message{font-size:12px;color:#96442f;line-height:1.7;margin:14px 0}.status-message:empty{margin:0}.summary{padding:24px;margin-top:20px}.summary .section-heading{margin-bottom:20px}.muted{font-size:11px;color:var(--muted)}.bar-row{margin:17px 0}.bar-label{display:flex;justify-content:space-between;font-size:12px;gap:12px;margin-bottom:8px}.bar-label strong{font-weight:600;font-variant-numeric:tabular-nums}.bar-track{height:9px;border-radius:10px;background:#ecf0eb;overflow:hidden}.bar-fill{height:100%;border-radius:10px;max-width:100%;transition:width .15s ease}.bar-caption{font-size:10px;color:var(--muted);margin:5px 0 0}.summary-footnote{font-size:10px;color:var(--muted);margin:20px 0 0;padding-top:15px;border-top:1px solid var(--border);line-height:1.7}.methodology{margin-top:18px;padding:0 20px;font-size:11px;color:#5a6a63;line-height:1.9}.methodology summary{cursor:pointer;padding:17px 0;color:#314d3e;list-style:none;display:flex;justify-content:space-between;font-weight:600}.methodology summary::-webkit-details-marker{display:none}.methodology div{padding-bottom:10px}.methodology p{margin:0 0 12px}footer{display:flex;justify-content:space-between;gap:20px;padding:32px 0;color:#728178;font-size:10px}footer span:first-child{font-weight:650;letter-spacing:.5px}button:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #69a99a;outline-offset:4px}@media(min-width:1550px){main{padding:0 55px}}@media(max-width:1080px){main{padding:0 24px}.topbar{padding:20px 24px}.workspace{grid-template-columns:235px minmax(0,1fr);gap:18px}.settings{padding:20px 15px}.model-grid{gap:9px}.model-title{padding:15px 12px 0}.model-fields,.model-results{padding-left:12px;padding-right:12px}.model-kind{margin-left:12px}.unit-tag{font-size:9px}.metric{font-size:9px}}@media(max-width:820px){.workspace{grid-template-columns:1fr}.settings{padding:22px}.settings #scenario-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}.settings .formula-note{padding-top:12px}.intro{padding:30px 0;gap:20px}.price-note{max-width:290px}h1{font-size:34px}.model-grid{gap:12px}.model-title{padding:18px 16px 0}.model-fields,.model-results{padding-left:16px;padding-right:16px}.metric{font-size:10px}.month-value{font-size:27px}}@media(max-width:580px){main{padding:0 16px}.topbar{padding:16px}.brand{font-size:17px}.brand-mark{width:36px;height:36px;font-size:25px}.privacy{font-size:0}.privacy span{font-size:13px}.intro{display:block;padding:27px 0}.intro h1{font-size:36px}.subtitle{font-size:12px}.price-note{max-width:none;margin-top:23px;padding:14px}.price-note p{font-size:11px}.workspace{gap:24px}.settings{padding:20px 16px}.settings #scenario-fields{gap:0 12px}.field label{font-size:11px}.field-help{font-size:9px}.model-grid{grid-template-columns:1fr;gap:16px}.model-card{display:grid;grid-template-columns:1fr 1fr}.model-title{grid-column:1/-1}.model-kind{grid-column:1/-1;margin-left:16px}.model-fields{padding-bottom:4px}.model-results{border-top:0;border-left:1px solid var(--border);padding-top:13px}.month-value{font-size:25px}.metrics{margin-top:18px}.metric{display:block;margin:10px 0}.metric dd{text-align:left;margin-top:2px;font-size:12px}.summary{padding:20px 16px}.section-heading{gap:8px}h2{font-size:17px}.eyebrow{font-size:9px;letter-spacing:1.3px}.unit-tag{font-size:8px;padding:6px}.methodology{padding:0 16px}footer{font-size:9px;gap:12px}.bar-label{font-size:11px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}@media print{.topbar{padding:10px}.intro{padding:20px 0}.workspace{grid-template-columns:220px 1fr;gap:12px}.model-grid{grid-template-columns:repeat(3,1fr)}.model-card{display:block}.settings{padding:12px}.model-results{border-left:0}.text-button{display:none}main{padding:0}.panel,.model-card{break-inside:avoid}.price-note{font-size:10px}.privacy{display:none}footer{padding:10px 0}}
+
+</style>
+  
+  
+</head>
+<body>
+  <a class="skip-link" href="#workspace">跳至计算器</a>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark" aria-hidden="true">tl</span><span>Token Ledger<small>把每一次调用，算清楚</small></span></a>
+    <span class="privacy"><span aria-hidden="true">●</span> 纯本地计算 · 无需 API 密钥</span>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">AI COST EXPLORER / 模型成本实验室</p><h1>从一次调用，<br>看见整月成本<span>。</span></h1><p class="subtitle">调一调用量、缓存与重试，比较三种模型方案。</p></div>
+      <aside class="price-note"><span class="note-icon" aria-hidden="true">i</span><div><strong>示例价格，不是实时行情</strong><p>所有金额均为 USD。单价以每百万 token 计，使用前请填入供应商实际报价。</p></div></aside>
+    </section>
+    <div id="workspace" class="workspace">
+      <aside class="settings panel" aria-labelledby="settings-title">
+        <div class="section-heading"><div><p class="eyebrow">01 / SCENARIO</p><h2 id="settings-title">设定你的用量</h2></div><button id="reset" class="text-button" type="button">重置示例</button></div>
+        <form id="scenario-form" novalidate><div id="scenario-fields"></div></form>
+        <div class="formula-note"><strong>每天请求量指初始任务数</strong><p>失败时重试，成功即停止。每次尝试使用相同的平均 token 用量与缓存比例。</p></div>
+      </aside>
+      <section class="comparison" aria-labelledby="comparison-title">
+        <div class="section-heading"><div><p class="eyebrow">02 / COMPARE</p><h2 id="comparison-title">三个方案，一眼比较</h2></div><span class="unit-tag">USD / 百万 token</span></div>
+        <div id="model-cards" class="model-grid"></div>
+        <div id="calculation-status" class="status-message" role="status" aria-live="polite"></div>
+        <section class="summary panel" aria-labelledby="summary-title">
+          <div class="section-heading"><div><p class="eyebrow">03 / MONTHLY OUTLOOK</p><h2 id="summary-title">月度成本与预算</h2></div><span id="period-label" class="muted">30 天估算</span></div>
+          <div id="cost-bars" class="cost-bars"></div>
+          <p class="summary-footnote">低成本不代表更适合。请同时考虑任务成功率、质量和响应速度。</p>
+        </section>
+        <details class="methodology panel"><summary>计算口径与不包含的费用 <span aria-hidden="true">＋</span></summary><div>
+          <p>单次调用成本 = [输入 token × (未缓存比例 × 输入单价 + 缓存比例 × 缓存读取单价) + 输出 token × 输出单价] ÷ 1,000,000。</p>
+          <p>最多尝试次数 = 1 + 最大重试次数。设单次成功概率为 p，预计尝试次数为 1 + (1−p) + … + (1−p)<sup>重试次数</sup>，最终成功率为 1−(1−p)<sup>最多尝试次数</sup>。</p>
+          <p>每个初始任务期望成本 = 单次调用成本 × 预计尝试次数。日成本 = 每个初始任务期望成本 × 每日初始任务数。月成本 = 日成本 × 计费天数。</p>
+          <p>每次成功任务成本按总期望支出 ÷ 期望成功任务数计算，包含失败任务的支出。成功率为 0 时该指标无定义，显示“—”。</p>
+          <p>假设每次尝试相互独立，失败也消耗完整平均用量。这里未计入缓存写入、工具调用、存储、税费、最低消费、批量折扣及阶梯报价。实际账单可能不同。</p>
+        </div></details>
+      </section>
+    </div>
+    <footer><span>Token Ledger</span><span>透明假设 · 可编辑价格 · 无数据上传</span></footer>
+  </main>
+<script>
+/* Token Ledger calculation core.
+ * Independently implemented by dot after an actual GitHub Copilot consultation.
+ * Copilot's visible explanation and validation schema were reviewed; its complete
+ * generated source file was NOT imported. See AI_CONTRIBUTIONS.md for provenance.
+ */
+(function (root, factory) {
+  'use strict';
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  if (typeof window !== 'undefined') window.CostMath = api;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  const rules = Object.freeze({
+    inputTokens: { min: 0, max: 1e9, integer: true },
+    outputTokens: { min: 0, max: 1e9, integer: true },
+    tasksPerDay: { min: 0, max: 1e9, integer: true },
+    inputPrice: { min: 0, max: 1e6 },
+    cachePrice: { min: 0, max: 1e6 },
+    outputPrice: { min: 0, max: 1e6 },
+    cacheHit: { min: 0, max: 100 },
+    successRate: { min: 0, max: 100 },
+    retries: { min: 0, max: 10, integer: true },
+    days: { min: 1, max: 366, integer: true },
+    budget: { min: 0, max: 1e12 },
+  });
+  const decimal = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i;
+  function calculate(input) {
+    const data = input && typeof input === 'object' && !Array.isArray(input) ? input : {};
+    const errors = {}, values = {};
+    for (const [key, rule] of Object.entries(rules)) {
+      const raw = data[key];
+      if (raw === undefined || raw === null || (typeof raw === 'string' && raw.trim() === '')) {
+        errors[key] = '请填写数值'; continue;
+      }
+      if (!['number', 'string'].includes(typeof raw) || (typeof raw === 'string' && !decimal.test(raw.trim()))) {
+        errors[key] = '请输入有效数字'; continue;
+      }
+      const n = Number(raw);
+      if (!Number.isFinite(n)) errors[key] = '请输入有限数字';
+      else if (n < rule.min || n > rule.max) errors[key] = `请输入 ${rule.min}–${rule.max} 范围内的数值`;
+      else if (rule.integer && !Number.isSafeInteger(n)) errors[key] = '请填写整数';
+      else if (key === 'successRate' && n > 0 && n < 0.000001) errors[key] = '非零成功率至少为 0.000001%';
+      else if (key === 'budget' && n > 0 && n < 0.01) errors[key] = '非零月预算至少为 0.01 USD';
+      else values[key] = n;
+    }
+    if (Object.keys(errors).length) return { errors };
+    const v = values, p = v.successRate / 100, h = v.cacheHit / 100;
+    const attemptCost = (v.inputTokens * ((1 - h) * v.inputPrice + h * v.cachePrice) + v.outputTokens * v.outputPrice) / 1e6;
+    let expectedAttempts = 0, failureProbability = 1;
+    for (let attempt = 0; attempt <= v.retries; attempt++) {
+      expectedAttempts += failureProbability;
+      failureProbability *= 1 - p;
+    }
+    // log1p/expm1 preserve precision for small nonzero probabilities.
+    const eventualSuccess = p === 0 ? 0 : p === 1 ? 1 : -Math.expm1((v.retries + 1) * Math.log1p(-p));
+    const taskCost = attemptCost * expectedAttempts;
+    const dayCost = taskCost * v.tasksPerDay;
+    const monthCost = dayCost * v.days;
+    const costPerSuccess = eventualSuccess === 0 ? null : taskCost / eventualSuccess;
+    return { attemptCost, expectedAttempts, eventualSuccess, taskCost, dayCost, monthCost, costPerSuccess, budgetRemaining: v.budget - monthCost };
+  }
+  return Object.freeze({ calculate });
+}));
+
+</script>
+<script>
+/* UI written by dot. Calculation-core attribution is recorded separately. */
+'use strict';
+(function () {
+  const scenario = [
+    { key: 'inputTokens', label: '平均输入 token / 次', value: 2000, unit: 'token', max: 1000000000 },
+    { key: 'outputTokens', label: '平均输出 token / 次', value: 500, unit: 'token', max: 1000000000 },
+    { key: 'cacheHit', label: '输入缓存命中比例', value: 40, unit: '%', max: 100, step: 0.1, help: '仅对命中的输入 token 使用缓存读取单价' },
+    { key: 'tasksPerDay', label: '每天初始任务数', value: 1000, unit: '次', max: 1000000000 },
+    { key: 'retries', label: '最大重试次数', value: 2, unit: '次', max: 10, help: '不含首次调用；0 表示不重试' },
+    { key: 'days', label: '每月计费天数', value: 30, unit: '天', min: 1, max: 366 },
+    { key: 'budget', label: '月度预算', value: 150, unit: 'USD', max: 1000000000000, step: 0.01, help: '可填 0；非零预算至少为 0.01 USD' },
+  ];
+  const modelFields = [
+    { key: 'inputPrice', label: '输入单价', unit: '$ / M', max: 1000000, step: 0.01 },
+    { key: 'cachePrice', label: '缓存读取单价', unit: '$ / M', max: 1000000, step: 0.01 },
+    { key: 'outputPrice', label: '输出单价', unit: '$ / M', max: 1000000, step: 0.01 },
+    { key: 'successRate', label: '单次成功率', unit: '%', max: 100, step: 0.1 },
+  ];
+  const models = [
+    { name: '轻量方案', kind: '方案 A / 假设示例', color: '#087c68', values: [0.2, 0.02, 0.8, 85] },
+    { name: '均衡方案', kind: '方案 B / 假设示例', color: '#56848e', values: [1, 0.1, 4, 95] },
+    { name: '进阶方案', kind: '方案 C / 假设示例', color: '#a1ab58', values: [3, 0.3, 12, 99] },
+  ];
+  const $ = id => document.getElementById(id);
+  function fieldHTML(field, prefix, value) {
+    const id = prefix + field.key;
+    return `<div class="field"><label for="${id}">${field.label}</label><div class="input-wrap"><input id="${id}" name="${id}" type="number" inputmode="decimal" min="${field.min ?? 0}" max="${field.max}" step="${field.step ?? 1}" value="${value}" required aria-describedby="${id}-error${field.help ? ' ' + id + '-help' : ''}"><span class="input-suffix" aria-hidden="true">${field.unit}</span></div>${field.help ? `<p class="field-help" id="${id}-help">${field.help}</p>` : ''}<p class="field-error" id="${id}-error"></p></div>`;
+  }
+  $('scenario-fields').innerHTML = scenario.map(f => fieldHTML(f, '', f.value)).join('');
+  $('model-cards').innerHTML = models.map((m, i) => `<article class="model-card" style="--model-color:${m.color}" aria-label="${m.kind}"><div class="model-title"><span class="model-dot" aria-hidden="true"></span><input id="model-${i}-name" type="text" maxlength="24" value="${m.name}" aria-label="方案 ${String.fromCharCode(65 + i)} 名称"></div><p class="model-kind">${m.kind}</p><div class="model-fields">${modelFields.map((f, k) => fieldHTML(f, 'model-' + i + '-', m.values[k])).join('')}</div><div class="model-results" id="model-${i}-results"></div></article>`).join('');
+  $('cost-bars').innerHTML = models.map((m, i) => `<div class="bar-row"><div class="bar-label"><span id="bar-${i}-name"></span><strong id="bar-${i}-value">—</strong></div><div class="bar-track"><div class="bar-fill" id="bar-${i}" style="background:${m.color};width:0%"></div></div><p class="bar-caption" id="bar-${i}-caption"></p></div>`).join('');
+  const money = (number, detailed = false) => {
+    if (number === null || !Number.isFinite(number)) return '—';
+    if (number > 0 && number < (detailed ? 0.000001 : 0.01)) return detailed ? '< $0.000001' : '< $0.01';
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: detailed ? 4 : 2, maximumFractionDigits: detailed ? 6 : 2 }).format(number);
+  };
+  const percentage = n => Number.isFinite(n) ? new Intl.NumberFormat('zh-CN', { style: 'percent', maximumFractionDigits: 2 }).format(n) : '—';
+  function clearErrors() {
+    document.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+    document.querySelectorAll('.field-error').forEach(el => { el.textContent = ''; });
+  }
+  function metric(label, value) {
+    const row = document.createElement('div'); row.className = 'metric';
+    const dt = document.createElement('dt'); dt.textContent = label;
+    const dd = document.createElement('dd'); dd.textContent = value;
+    row.append(dt, dd); return row;
+  }
+  function renderModel(i, result) {
+    const target = $('model-' + i + '-results'); target.replaceChildren();
+    const label = document.createElement('p'); label.className = 'result-label'; label.textContent = '预计每月成本';
+    const amount = document.createElement('p'); amount.className = 'month-value'; amount.textContent = result ? money(result.monthCost) : '—';
+    const unit = document.createElement('small'); unit.textContent = '/ 月'; amount.append(unit);
+    const badge = document.createElement('span'); badge.className = 'budget-pill';
+    badge.textContent = result ? (result.budgetRemaining >= 0 ? '预算内 · 余 ' + money(result.budgetRemaining) : '超预算 · ' + money(-result.budgetRemaining)) : '请检查输入';
+    if (result && result.budgetRemaining < 0) badge.classList.add('over');
+    const metrics = document.createElement('dl'); metrics.className = 'metrics';
+    [['单次调用', result && money(result.attemptCost, true)], ['每个初始任务', result && money(result.taskCost, true)], ['每天成本', result && money(result.dayCost)], ['每次成功任务', result && money(result.costPerSuccess, true)], ['最终成功率', result && percentage(result.eventualSuccess)], ['平均尝试次数', result && result.expectedAttempts.toFixed(3) + ' 次']].forEach(([key, value]) => metrics.append(metric(key, value || '—')));
+    target.append(label, amount, badge, metrics);
+  }
+  function update() {
+    clearErrors();
+    const shared = Object.fromEntries(scenario.map(f => [f.key, $(f.key).value]));
+    const errors = new Set();
+    const results = models.map((model, i) => {
+      const data = { ...shared, ...Object.fromEntries(modelFields.map(f => [f.key, $('model-' + i + '-' + f.key).value])) };
+      let result = null;
+      if (window.CostMath) {
+        const output = window.CostMath.calculate(data);
+        if (output.errors) {
+          for (const [key, message] of Object.entries(output.errors)) {
+            const id = scenario.some(f => f.key === key) ? key : 'model-' + i + '-' + key;
+            $(id).setAttribute('aria-invalid', 'true'); $(id + '-error').textContent = message; errors.add(id);
+          }
+        } else result = output;
+      }
+      renderModel(i, result); return result;
+    });
+    $('calculation-status').textContent = !window.CostMath ? '开发预览：计算核心等待 GitHub Copilot 协作，当前不输出估算。' : errors.size ? `有 ${errors.size} 个输入需要修正；对应方案暂不计算。` : '';
+    const validDays = Number(shared.days); $('period-label').textContent = shared.days.trim() && Number.isInteger(validDays) && validDays >= 1 && validDays <= 366 ? validDays + ' 天估算' : '请填写有效天数';
+    const max = Math.max(...results.map(r => r ? r.monthCost : 0), 0);
+    results.forEach((r, i) => {
+      $('bar-' + i + '-name').textContent = $('model-' + i + '-name').value.trim() || '未命名方案 ' + String.fromCharCode(65 + i);
+      $('bar-' + i + '-value').textContent = r ? money(r.monthCost) : '—';
+      $('bar-' + i).style.width = r && max > 0 ? (r.monthCost / max * 100) + '%' : '0%';
+      $('bar-' + i + '-caption').textContent = !r ? '请检查此方案输入' : Number(shared.budget) === 0 ? (r.monthCost === 0 ? '零预算 · 零支出' : '零预算 · 已超预算') : '占月度预算 ' + percentage(r.monthCost / Number(shared.budget));
+    });
+  }
+  $('scenario-form').addEventListener('submit', event => event.preventDefault());
+  document.querySelectorAll('input').forEach(el => el.addEventListener('input', update));
+  $('reset').addEventListener('click', () => {
+    scenario.forEach(f => { $(f.key).value = f.value; });
+    models.forEach((m, i) => { $('model-' + i + '-name').value = m.name; modelFields.forEach((f, k) => { $('model-' + i + '-' + f.key).value = m.values[k]; }); });
+    update();
+  });
+  update();
+}());
+
+</script>
+</body>
+</html>

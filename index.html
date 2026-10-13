@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="在浏览器内比较AI模型的token、缓存、重试和月度预算成本。示例价格可编辑，无API调用。">
+  <title>Token Ledger · AI 模型成本计算器</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="calculator.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">跳至计算器</a>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark" aria-hidden="true">tl</span><span>Token Ledger<small>把每一次调用，算清楚</small></span></a>
+    <span class="privacy"><span aria-hidden="true">●</span> 纯本地计算 · 无需 API 密钥</span>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">AI COST EXPLORER / 模型成本实验室</p><h1>从一次调用，<br>看见整月成本<span>。</span></h1><p class="subtitle">调一调用量、缓存与重试，比较三种模型方案。</p></div>
+      <aside class="price-note"><span class="note-icon" aria-hidden="true">i</span><div><strong>示例价格，不是实时行情</strong><p>所有金额均为 USD。单价以每百万 token 计，使用前请填入供应商实际报价。</p></div></aside>
+    </section>
+    <div id="workspace" class="workspace">
+      <aside class="settings panel" aria-labelledby="settings-title">
+        <div class="section-heading"><div><p class="eyebrow">01 / SCENARIO</p><h2 id="settings-title">设定你的用量</h2></div><button id="reset" class="text-button" type="button">重置示例</button></div>
+        <form id="scenario-form" novalidate><div id="scenario-fields"></div></form>
+        <div class="formula-note"><strong>每天请求量指初始任务数</strong><p>失败时重试，成功即停止。每次尝试使用相同的平均 token 用量与缓存比例。</p></div>
+      </aside>
+      <section class="comparison" aria-labelledby="comparison-title">
+        <div class="section-heading"><div><p class="eyebrow">02 / COMPARE</p><h2 id="comparison-title">三个方案，一眼比较</h2></div><span class="unit-tag">USD / 百万 token</span></div>
+        <div id="model-cards" class="model-grid"></div>
+        <div id="calculation-status" class="status-message" role="status" aria-live="polite"></div>
+        <section class="summary panel" aria-labelledby="summary-title">
+          <div class="section-heading"><div><p class="eyebrow">03 / MONTHLY OUTLOOK</p><h2 id="summary-title">月度成本与预算</h2></div><span id="period-label" class="muted">30 天估算</span></div>
+          <div id="cost-bars" class="cost-bars"></div>
+          <p class="summary-footnote">低成本不代表更适合。请同时考虑任务成功率、质量和响应速度。</p>
+        </section>
+        <details class="methodology panel"><summary>计算口径与不包含的费用 <span aria-hidden="true">＋</span></summary><div>
+          <p>单次调用成本 = [输入 token × (未缓存比例 × 输入单价 + 缓存比例 × 缓存读取单价) + 输出 token × 输出单价] ÷ 1,000,000。</p>
+          <p>最多尝试次数 = 1 + 最大重试次数。设单次成功概率为 p，预计尝试次数为 1 + (1−p) + … + (1−p)<sup>重试次数</sup>，最终成功率为 1−(1−p)<sup>最多尝试次数</sup>。</p>
+          <p>每个初始任务期望成本 = 单次调用成本 × 预计尝试次数。日成本 = 每个初始任务期望成本 × 每日初始任务数。月成本 = 日成本 × 计费天数。</p>
+          <p>每次成功任务成本按总期望支出 ÷ 期望成功任务数计算，包含失败任务的支出。成功率为 0 时该指标无定义，显示“—”。</p>
+          <p>假设每次尝试相互独立，失败也消耗完整平均用量。这里未计入缓存写入、工具调用、存储、税费、最低消费、批量折扣及阶梯报价。实际账单可能不同。</p>
+        </div></details>
+      </section>
+    </div>
+    <footer><span>Token Ledger</span><span>透明假设 · 可编辑价格 · 无数据上传</span></footer>
+  </main>
+</body>
+</html>

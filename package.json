@@ -1,0 +1,10 @@
+{
+  "name": "token-ledger",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Browser-only AI token cost, cache, retry and budget calculator",
+  "scripts": {
+    "test": "node --test calculator.test.cjs && node static-check.cjs",
+    "build": "node build.cjs"
+  }
+}
