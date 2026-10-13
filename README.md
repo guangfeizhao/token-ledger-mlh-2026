@@ -12,6 +12,8 @@ This disclosure does not establish eligibility for any competition. Organizers d
 
 ## Try it
 
+**Live demo:** https://guangfeizhao.github.io/token-ledger-mlh-2026/
+
 Download `Token-Ledger.html` and open it in a browser. It is a complete offline single-file app; no installation, API key or server is required. Alternatively, clone/download the repository and open `index.html` with its neighboring assets intact.
 
 ## Features
@@ -50,7 +52,13 @@ npm run build
 
 `build.cjs` bundles the local CSS and JavaScript into `Token-Ledger.html`.
 
-16 calculation/export tests and 9 static checks passed. Browser interaction/visual testing is still pending; static checks are not a complete accessibility audit. See [TEST_REPORT.md](TEST_REPORT.md).
+16 calculation/export tests, 9 static checks and 13 live-browser interaction checks passed. Desktop layout was visually reviewed on the deployed site. This is not a complete accessibility or mobile audit. See [TEST_REPORT.md](TEST_REPORT.md).
+
+## Running application
+
+The screenshot below is an actual full-page capture of the deployed application with default hypothetical inputs.
+
+![Token Ledger running in a browser](token-ledger-desktop.png)
 
 ## Technology
 

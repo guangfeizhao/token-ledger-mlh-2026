@@ -22,4 +22,8 @@ Reference scenario: 2,000 input tokens, 500 output tokens, 40% cached input, inp
 
 ## Current limits
 
-Browser interaction and visual testing, screen-reader testing, mobile rendering verification, and application screenshots are pending. Static presence checks do not prove actual accessibility or rendered layout quality.
+The publicly deployed app was tested in the cloud browser at https://guangfeizhao.github.io/token-ledger-mlh-2026/ on 2026-10-13. Thirteen interaction checks passed: reference scenario output; blank input; aria-invalid marking; negative tokens; zero success; zero budget; sub-cent budget; zero volume; reset; fractional retries; text-only model names; expanding and collapsing the calculation explanation. See `browser-qa.json` for observations.
+
+A real full-page desktop screenshot is included as `token-ledger-desktop.png`. Desktop layout was visually reviewed. Two test assertions initially used exact whitespace/text matching and were corrected after inspecting the actual rendered DOM; these were test-selector issues, not application failures.
+
+Screen-reader testing and mobile-device rendering verification have not been completed. Browser console-history access was restricted, so no claim of a clean console is made. Static presence checks do not constitute a complete accessibility audit.

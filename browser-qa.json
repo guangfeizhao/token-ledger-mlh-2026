@@ -1,0 +1,73 @@
+{
+  "url": "https://guangfeizhao.github.io/token-ledger-mlh-2026/",
+  "timestamp": "2026-10-13T02:25:14.448Z",
+  "checks": [
+    {
+      "name": "Reference scenario updates monthly cost",
+      "passed": true,
+      "evidence": "预计每月成本\n\n$122.02/ 月\n\n预算内 · 余 $27.98\n单次调用\n$0.00328\n每个初始任务\n$0.004067\n每天成本\n$4.07\n每次成功任务\n$0.0041\n最终成功率\n99.2%\n平均尝试次数\n1.240 次"
+    },
+    {
+      "name": "Blank input shows validation",
+      "passed": true,
+      "evidence": "有 1 个输入需要修正；对应方案暂不计算。"
+    },
+    {
+      "name": "Blank input marks aria-invalid",
+      "passed": true,
+      "evidence": "aria-invalid=true"
+    },
+    {
+      "name": "Negative tokens rejected",
+      "passed": true,
+      "evidence": "Negative token range validation"
+    },
+    {
+      "name": "Zero success uses all retries and no division by zero",
+      "passed": true,
+      "evidence": "预计每月成本\n\n$59.04/ 月\n\n预算内 · 余 $90.96\n单次调用\n$0.000656\n每个初始任务\n$0.001968\n每天成本\n$1.97\n每次成功任务\n—\n最终成功率\n0%\n平均尝试次数\n3.000 次"
+    },
+    {
+      "name": "Zero budget reports over-budget",
+      "passed": true,
+      "evidence": "零预算 · 已超预算"
+    },
+    {
+      "name": "Sub-cent budget rejected",
+      "passed": true,
+      "evidence": "Sub-cent validation"
+    },
+    {
+      "name": "Zero volume is zero monthly cost",
+      "passed": true,
+      "evidence": "Actual DOM uses $0.00/ 月"
+    },
+    {
+      "name": "Reset restores default cost",
+      "passed": true,
+      "evidence": "Default restored"
+    },
+    {
+      "name": "Fractional retry rejected",
+      "passed": true,
+      "evidence": "Integer validation"
+    },
+    {
+      "name": "Model names remain plain text",
+      "passed": true,
+      "evidence": "Text-only name rendering"
+    },
+    {
+      "name": "Methodology expands",
+      "passed": true,
+      "evidence": "Formula paragraph visible"
+    },
+    {
+      "name": "Methodology collapses",
+      "passed": true,
+      "evidence": "Formula paragraph hidden"
+    }
+  ],
+  "consoleLogs": "Not inspected: browser retained-data restriction",
+  "mobile": "Not yet verified"
+}
